@@ -21,7 +21,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
         var b_canvas = document.getElementById("canvas");
         var b_context = b_canvas.getContext("2d");
 
-	
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,6 +50,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		  
 		  
 		  
+		  //sup
 		  
 		  var bodyDefWall = new b2BodyDef;
 		  bodyDefWall.type = b2Body.b2_staticBody;
