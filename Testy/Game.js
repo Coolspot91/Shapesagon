@@ -22,7 +22,12 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
         var b_context = b_canvas.getContext("2d");
 
 
+        var a = document.createElement('script');
+        a.src = "platform.js"
+        document.body.appendChild(a);
 
+        var drawPlatform = true;
+        var destroy = false;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -50,8 +55,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		  
 		  
 		  
-		  //sup
-		  
+		  //LEFT
 		  var bodyDefWall = new b2BodyDef;
 		  bodyDefWall.type = b2Body.b2_staticBody;
 		  bodyDefWall.position.x = 4.75;
@@ -67,7 +71,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		  wall.CreateFixture(fixDefWall);
 		  wall.SetUserData("wall");
 		  
-		  
+		  //RIGHT
 		  var bodyDefWall2 = new b2BodyDef;
 		  bodyDefWall2.type = b2Body.b2_staticBody;
 		  bodyDefWall2.position.x = 25.25;
@@ -86,6 +90,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		  
 		  
 		  
+		  //TOP
 		  var bodyDefWall3 = new b2BodyDef;
 		  bodyDefWall3.type = b2Body.b2_staticBody;
 		  bodyDefWall3.position.x = 15;
@@ -101,7 +106,41 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		  wall3.CreateFixture(fixDefWall3);
 		  wall3.SetUserData("wall");
 		  
+		  //draw();
+		  var listener = new Box2D.Dynamics.b2ContactListener;
 		  
+		  listener.BeginContact = function(contact) 
+		  {
+			  // console.log(contact.GetFixtureA().GetBody().GetUserData());
+			  if(contact.GetFixtureB().GetBody().GetUserData()=="ball" 
+			        || contact.GetFixtureA().GetBody().GetUserData()=="ball")
+			  {       	
+				  if(contact.GetFixtureA().GetBody().GetUserData()== "platform" 	
+					  ||contact.GetFixtureB().GetBody().GetUserData()=="platform")    	
+				  {   		 
+					  destroy = true;      
+				  }
+			  }
+		  }
+
+		    
+		  listener.EndContact = function(contact) 
+		  {
+			  // console.log(contact.GetFixtureA().GetBody().GetUserData());
+			  if(contact.GetFixtureB().GetBody().GetUserData()=="ball" 
+			        || contact.GetFixtureA().GetBody().GetUserData()=="ball")
+			  {
+				  if(contact.GetFixtureA().GetBody().GetUserData()== "platform"
+		    	        	||contact.GetFixtureB().GetBody().GetUserData()=="platform")
+				  {	 
+					  destroy = false; 
+				  }
+			  }
+		  }
+		    
+		    
+		   
+		    this.world.SetContactListener(listener);
 	
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,5 +154,11 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
             
             b_context.fillStyle = '#fff';
     	   	b_context.font = 'italic bold 30px sans-serif';
+    	   	
+    		  
+    	   	if(destroy == true)
+    	   	{
+    	   		world.DestroyBody(circle);
+    	   	}
 
 		}
