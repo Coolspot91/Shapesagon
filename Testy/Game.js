@@ -28,6 +28,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 
         var drawPlatform = true;
         var destroy = false;
+		var Cannon=null;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -39,19 +40,22 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
         debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
         world.SetDebugDraw(debugDraw);
 		
-		  var bodyDef = new b2BodyDef;
-		  bodyDef.type = b2Body.b2_dynamicBody;
-		  bodyDef.position.x = 22;
-		  bodyDef.position.y = 13;
+		
+	function Game(b_canvas, b_context, world)
+	{	
+		 var bodyDef = new b2BodyDef;
+		 bodyDef.type = b2Body.b2_dynamicBody;
+		 bodyDef.position.x = 22;
+		 bodyDef.position.y = 13;
 		 
-		  var fixDef = new b2FixtureDef;
-		  fixDef.density = 1000.0;
-		  fixDef.friction = 0;
-		  fixDef.restitution = 0.2;
-		  fixDef.shape = new b2CircleShape(0.35);
-		  var circle = world.CreateBody(bodyDef);
-		  circle.CreateFixture(fixDef);
-		  circle.SetUserData("ball");
+		var fixDef = new b2FixtureDef;
+		fixDef.density = 1000.0;
+		fixDef.friction = 0;
+		fixDef.restitution = 0.2;
+		fixDef.shape = new b2CircleShape(0.35);
+		var circle = world.CreateBody(bodyDef);
+		circle.CreateFixture(fixDef);
+		circle.SetUserData("ball");
 		  
 		  
 		  
@@ -105,8 +109,18 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		  var wall3 = world.CreateBody(bodyDefWall3);
 		  wall3.CreateFixture(fixDefWall3);
 		  wall3.SetUserData("wall");
-		  
-		  //draw();
+	}
+		    
+	Game.prototype.init = function()
+	{
+		//this.Cannon = new Cannon(this.b_canvas,this.b_context,this.world, 10,10);
+		//this.Cannon = new mys();
+	}
+	//var person = new Person("Bob", "M");
+	var test = new TestClass();
+		var game = new Game(b_canvas, b_context, world);
+		game.init();
+		
 		  var listener = new Box2D.Dynamics.b2ContactListener;
 		  
 		  listener.BeginContact = function(contact) 
@@ -141,7 +155,6 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		    
 		   
 		    this.world.SetContactListener(listener);
-	
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         window.setInterval(update,1000/60);
@@ -160,5 +173,5 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
     	   	{
     	   		world.DestroyBody(circle);
     	   	}
-
 		}
+		

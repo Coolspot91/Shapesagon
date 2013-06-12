@@ -1,0 +1,12 @@
+body
+{
+	background-color: rgb(46, 50, 53);
+}
+
+canvas
+{
+	position: absolute;
+	left: 50%;
+	margin-left: -512px;
+	border: 1px dashed white;
+}
