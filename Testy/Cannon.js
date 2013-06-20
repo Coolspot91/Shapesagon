@@ -2,8 +2,8 @@
 function Cannon(mCanvas,mContext,mWorld,mPos)
 {		
 	this.world = mWorld;
-	//this.canvas = mCanvas;
-	//this.context = mContext;
+	this.canvas = mCanvas;
+	this.context = mContext;
 	this.fixDef = new B2FixtureDef();
 	this.bodyDef = new B2BodyDef();
 	this.pos = mPos;
@@ -32,10 +32,10 @@ function Cannon(mCanvas,mContext,mWorld,mPos)
 	this.theBody = world.CreateBody(this.bodyDef);
 	this.theBody.CreateFixture(this.fixDef);
 	
-	this.pos = this.theBody.GetPosition();
+	/*this.pos = this.theBody.GetPosition();
 	this.rot.x = this.pos.x +2;
 	this.rot.y = this.pos.y +2;
-	this.theBody.GetWorldPoint(this.rot );
+	this.theBody.GetWorldPoint(this.rot );*/
 	//theBody = world.CreateBody(this.bodyDef);
 	//theBody.CreateFixture(this.fixDef);
 	
@@ -81,24 +81,40 @@ function Cannon(mCanvas,mContext,mWorld,mPos)
 	this.RevJoint2.bodyA = this.theBody;
 	this.RevJoint2.bodyB = this.circle;
 	this.RevJoint2.localAnchorA.Set(0,2);
-	world.CreateJoint(this.RevJoint2);
+	
+	
+	this.jointJohn = world.CreateJoint(this.RevJoint2);
+	var angle = 90*this.DEGTORAD;
+	var angle2 = 90* this.RADTODEG;
+	this.theBody.SetAngle(0);
+	this.RotationPoint.SetAngle(0);
+	this.circle.SetAngle(0);
+}
 
-	this.Update = function()
-	{
-		if(this.shoot == true)
+Cannon.prototype.Update = function()
+{
+	if(this.shoot == true)
 		{
-			if (this.RevJoint2 != null) 
-			{
+			//if (this.RevJoint2 != null) 
+			//{
 				//world.DestroyJoint(this.RevJoint2);
-				this.RevJoint2=null;
+				//this.RevJoint2=null;
 				this.shoot = false;
-				//this.circle.ApplyImpulse(new B2Vec2(0,this.Body.GetAngle()),this.theBody.GetWorldCenter()  );
-				//var bodyAngle = this.theBody.GetAngle();
+				world.DestroyJoint(this.jointJohn);
+				//this.circle.ApplyImpulse(new B2Vec2(3,3),this.theBody.GetWorldCenter()  );
+				var bodyAngle = this.theBody.GetAngle();
+				//bodyAngle = bodyAngle*angle;
+				//this.theBody.SetAngle(bodyAngle);
+				//this.AngleToVector(bodyAngle);
+				
+				//this.RotateVector(this.RotationPoint.GetPosition(), bodyAngle);
+				this.Rad2vec(bodyAngle);
+				
 				//this.theBody.SetAngle(bodyAngle);
 				//var bodyAngle = this.theBody.GetPosition();
-				//this.theBody.SetTransform( this.theBody.GetPosition(), bodyAngle );
+				//this.theBody.SetTransform( this.theBody.GetPosition(), 1 );
 				
-			}
+			//}
 		}
 		if (this.MoveLeft == true)
 			{
@@ -121,11 +137,68 @@ function Cannon(mCanvas,mContext,mWorld,mPos)
 				console.log("Right");
 			}
 		else{this.theBody.SetAngularVelocity(0);}
-	};
+}
+
+Cannon.prototype.RotateVector = function (vectorToRotate, angleInRadians) 
+{
+		var rotationMatrix = B2Mat22.FromAngle(angleInRadians);
+		var newVec = vectorToRotate.Copy();
+		//newVec.x = newVec.x*this.DEGTORAD;
+		//newVec.y = newVec.y*this.DEGTORAD;
+		newVec.MulM(rotationMatrix);
+		
+		//this.circle.ApplyImpulse(newVec,this.theBody.GetWorldCenter()  );
+		this.circle.SetLinearVelocity(new B2Vec2(newVec.x,newVec.y));
+		//return newVec; 
 };
 
+Cannon.prototype.Rad2vec = function( r) {
+    var newVec =  B2Mat22.FromAngle(r);
+	var testVec = new B2Vec2(220,220);
+	newVec.MulM(testVec);
+	this.circle.SetLinearVelocity(new B2Vec2(newVec.x,newVec.y));
+}
 
 
+
+
+
+
+/*Cannon.prototype.AngleToVector = function(angle)
+{
+   // var X = Math.Sin(angle);
+    //var Y = Math.Cos(angle);
+	var rotationMatrix = B2Mat22.FromAngle(angle);
+	rotationMatrix.x = rotationMatrix.x*5;
+	rotationMatrix.y = rotationMatrix.y*5;
+	this.circle.ApplyImpulse(new B2Vec2(rotationMatrix.x,rotationMatrix.y),this.theBody.GetWorldCenter()  );
+	
+}*/
+
+
+
+// b2Vec2 rad2vec(float r, float m = 1) {
+   // return b2Vec2(cos(r),sin(r))*m;
+// }
+// b2Vec2 deg2vec(float r, float m = 1) {
+   // return rad2vec(r*0.017453292519943295769236907684886f,m);
+// }
+// float vec2rad(b2Vec2 v) {
+   // return atan2(v.y,v.x);
+// }
+// float vec2deg(b2Vec2 v) {
+   // return vec2rad(v)*57.295779513082320876798154814105f;
+// }
+
+/*Vector2 AngleToVector(float angle)
+{
+    return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+}
+
+float VectorToAngle(Vector2 vector)
+{
+    return (float)Math.Atan2(vector.Y, vector.X);
+}*/
 
 
 

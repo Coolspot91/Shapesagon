@@ -40,10 +40,9 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		//this.world = new B2World( new B2Vec2(0, 9.81), true);
         var b_canvas = document.getElementById("canvas");
         var b_context = b_canvas.getContext("2d");
-		var fixDef = new B2FixtureDef();	
-		var bodyDef = new B2BodyDef();	
+	
 		
-		var Cannon, myBall;
+		var Cannon, myBall, game;
         var drawPlatform = true;
         var destroy = false;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,25 +56,52 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
         debugDraw.SetFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit);
         world.SetDebugDraw(debugDraw);
 		
+		game = new Game(b_canvas, b_context, world); 
+		
 		
 	function Game(b_canvas, b_context, world)
 	{	
 	
-		/*var bodyDef = new B2BodyDef;
-		bodyDef.type = B2Body.b2_dynamicBody;
-		bodyDef.position.x = 22;
-		bodyDef.position.y = 13;
+	/*var fixDefRotationPoint = new B2FixtureDef();
+	var bodyDefRotationPoint = new B2BodyDef();
+	bodyDefRotationPoint.position.x = 15;
+	bodyDefRotationPoint.position.y = 12;
+	bodyDefRotationPoint.type = B2Body.b2_staticBody;
 		 
-		var fixDef = new B2FixtureDef;
-		fixDef.density = 1000.0;
-		fixDef.friction = 0;
-		fixDef.restitution = 0.2;
-		fixDef.shape = new B2CircleShape(0.35);
-		circle = world.CreateBody(bodyDef);
-		circle.CreateFixture(fixDef);
-		circle.SetUserData("ball");*/
+	fixDefRotationPoint.density = 1000.0;
+	fixDefRotationPoint.friction = 0;
+	fixDefRotationPoint.restitution = 0.2;
+	fixDefRotationPoint.shape = new B2CircleShape(0.5);
+	var RotationPoint = world.CreateBody(bodyDefRotationPoint);
+	RotationPoint.CreateFixture(fixDefRotationPoint);
+	RotationPoint.SetUserData("RotationPoint");
+	RotationPoint.SetAwake(true);
+	
+	var fixDefCircle = new B2FixtureDef();
+	var bodyDefCircle = new B2BodyDef();
+	bodyDefCircle.position.x = 15;
+	bodyDefCircle.position.y = 17;
+	bodyDefCircle.type = B2Body.b2_dynamicBody;
+		 
+	fixDefCircle.density = 1.0;
+	fixDefCircle.friction = 0;
+	fixDefCircle.restitution = 0.2;
+	fixDefCircle.shape = new B2CircleShape(0.35);
+	var circle = world.CreateBody(bodyDefCircle);
+	circle.CreateFixture(fixDefCircle);
+	circle.SetUserData("ball");
+	circle.SetAwake(true);
+	
+	var RevJoint = new B2WeldJointDef();
+	RevJoint.bodyA = circle;
+	RevJoint.bodyB = RotationPoint;
+	RevJoint.localAnchorA.Set(0,-2);
+	world.CreateJoint(RevJoint);
+	
+	world.DestroyJoint(RevJoint);*/
+	
+	
 
-		  
 		Cannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5));
 		//myBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 7));
 		  
@@ -84,8 +110,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2));
 
 	}
-	
-		var game = new Game(b_canvas, b_context, world);
+
 		
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +139,9 @@ window.addEventListener('keyup', function (event)
        	case 39: // Right arrow
 		Cannon.MoveRight = false;
            	break;
+		case 32: // Space
+		Cannon.shoot = false;
+			break;
     }
 }
 , false);
@@ -126,22 +154,18 @@ window.addEventListener('keydown', function (event)
         case 37: // Left arrow
 		Cannon.MoveLeft = true;
 		//Cannon.theBody.ApplyImpulse(new B2Vec2(0,5*-125),new B2Vec2(0,0));
-		//circle.ApplyImpulse(new B2Vec2(-200,0),new B2Vec2(0,0));
-		//this.myBall.circle.SetAngularVelocity(1);
            	break;
 			
        	case 39: // Right arrow
 		Cannon.MoveRight = true;
 		//Cannon.theBody.ApplyImpulse(new B2Vec2(0,5*125),new B2Vec2(0,0));
-		//circle.ApplyImpulse(new B2Vec2(2000,0),new B2Vec2(0,0));
-		//myBall.circle.SetAngularVelocity(-1);
            	break;
 			
 		case 38:  // up arrow
 		//circle.ApplyImpulse(new B2Vec2(0,5*-200),new B2Vec2(0,0));
 			break;
 			
-		case 32:
+		case 32:  // Space
 		Cannon.shoot = true;
 			break;
     }
