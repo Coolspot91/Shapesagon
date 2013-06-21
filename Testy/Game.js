@@ -36,15 +36,16 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		,   B2WeldJointDef = Box2D.Dynamics.Joints.b2WeldJointDef
 		,	B2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef;
 
-        var world = new B2World(new B2Vec2(0,0), false);
+        var world = new B2World(new B2Vec2(0,5), false);
 		//this.world = new B2World( new B2Vec2(0, 9.81), true);
         var b_canvas = document.getElementById("canvas");
         var b_context = b_canvas.getContext("2d");
 	
 		
-		var Cannon, myBall, game;
+		var Cannon, myBall, game, Rope;
         var drawPlatform = true;
         var destroy = false;
+		var createCannon = true;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -61,49 +62,10 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		
 	function Game(b_canvas, b_context, world)
 	{	
-	
-	/*var fixDefRotationPoint = new B2FixtureDef();
-	var bodyDefRotationPoint = new B2BodyDef();
-	bodyDefRotationPoint.position.x = 15;
-	bodyDefRotationPoint.position.y = 12;
-	bodyDefRotationPoint.type = B2Body.b2_staticBody;
-		 
-	fixDefRotationPoint.density = 1000.0;
-	fixDefRotationPoint.friction = 0;
-	fixDefRotationPoint.restitution = 0.2;
-	fixDefRotationPoint.shape = new B2CircleShape(0.5);
-	var RotationPoint = world.CreateBody(bodyDefRotationPoint);
-	RotationPoint.CreateFixture(fixDefRotationPoint);
-	RotationPoint.SetUserData("RotationPoint");
-	RotationPoint.SetAwake(true);
-	
-	var fixDefCircle = new B2FixtureDef();
-	var bodyDefCircle = new B2BodyDef();
-	bodyDefCircle.position.x = 15;
-	bodyDefCircle.position.y = 17;
-	bodyDefCircle.type = B2Body.b2_dynamicBody;
-		 
-	fixDefCircle.density = 1.0;
-	fixDefCircle.friction = 0;
-	fixDefCircle.restitution = 0.2;
-	fixDefCircle.shape = new B2CircleShape(0.35);
-	var circle = world.CreateBody(bodyDefCircle);
-	circle.CreateFixture(fixDefCircle);
-	circle.SetUserData("ball");
-	circle.SetAwake(true);
-	
-	var RevJoint = new B2WeldJointDef();
-	RevJoint.bodyA = circle;
-	RevJoint.bodyB = RotationPoint;
-	RevJoint.localAnchorA.Set(0,-2);
-	world.CreateJoint(RevJoint);
-	
-	world.DestroyJoint(RevJoint);*/
-	
-	
-
-		Cannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5));
-		//myBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 7));
+		if(createCannon)
+		{Cannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5) , new B2Vec2(3/2 , 1.5/2));}
+		else
+		{Rope = new Rope(this.b_canvas,this.b_context,this.world,  new B2Vec2(20, 5) , new B2Vec2(.3/2 , 1/2));}
 		  
 		this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2)); 
 		this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2));
@@ -122,8 +84,9 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
             world.DrawDebugData();
             world.ClearForces();
            
-			
-			Cannon.Update();
+			if(createCannon)
+			{Cannon.Update();}
+			else{Rope.Update();}
     	   	
 		}
 
@@ -135,12 +98,18 @@ window.addEventListener('keyup', function (event)
                
         case 37: // Left arrow
 		Cannon.MoveLeft = false;
+		Rope.MoveLeft = false;
            	break;
        	case 39: // Right arrow
 		Cannon.MoveRight = false;
+		Rope.MoveRight = false;
            	break;
+		case 38:  // up arrow
+		Cannon.reset = false;
+			break;
 		case 32: // Space
 		Cannon.shoot = false;
+		Rope.shoot = false;
 			break;
     }
 }
@@ -153,21 +122,41 @@ window.addEventListener('keydown', function (event)
                
         case 37: // Left arrow
 		Cannon.MoveLeft = true;
-		//Cannon.theBody.ApplyImpulse(new B2Vec2(0,5*-125),new B2Vec2(0,0));
+		Rope.MoveLeft = true;
            	break;
 			
        	case 39: // Right arrow
 		Cannon.MoveRight = true;
-		//Cannon.theBody.ApplyImpulse(new B2Vec2(0,5*125),new B2Vec2(0,0));
+		Rope.MoveRight = true;
            	break;
 			
 		case 38:  // up arrow
-		//circle.ApplyImpulse(new B2Vec2(0,5*-200),new B2Vec2(0,0));
+		Cannon.reset = true;
 			break;
+			
+		// case 40:   // up arrow
+
+			// break;
 			
 		case 32:  // Space
 		Cannon.shoot = true;
+		Rope.shoot = true;
 			break;
+			
+		case 65: //a
+			break;
+			
+		case 68:// d
+			break;
+			
+		case 87: // e
+		Cannon.DestroyCannon();
+			break;
+			
+		case 88:  //x
+		Rope.DestroyRope();
+			break;
+		
     }
 }
 , false);
