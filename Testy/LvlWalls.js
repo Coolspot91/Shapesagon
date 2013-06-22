@@ -16,7 +16,7 @@ function LvlWalls(mCanvas,mContext,mWorld,mPos,mSize)
 	var fixDefWall = new B2FixtureDef;
 	fixDefWall.density = 1000.0;
 	fixDefWall.friction = 0;
-	fixDefWall.restitution = 0.2;
+	fixDefWall.restitution = 0.8;
 	fixDefWall.shape = new B2PolygonShape();
 	fixDefWall.shape.SetAsBox(this.size.x , this.size.y);
 	var wall = world.CreateBody(bodyDefWall);

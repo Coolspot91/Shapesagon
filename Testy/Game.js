@@ -67,6 +67,17 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		else
 		{Rope = new Rope(this.b_canvas,this.b_context,this.world,  new B2Vec2(20, 5) , new B2Vec2(.3/2 , 1/2));}
 		  
+		this.BounceBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(9, 15));
+		this.BounceBall2 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(12, 15));
+		this.BounceBall3 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 15));
+		this.BounceBall4 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(18, 15));
+		this.BounceBall5 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(21, 15));
+		
+		this.BounceBall6 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(10.5, 17));
+		this.BounceBall7 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(13.5, 17));
+		this.BounceBall8 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(16.5, 17));
+		this.BounceBall9 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(19.5, 17));
+		
 		this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2)); 
 		this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2));
 		this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2));
