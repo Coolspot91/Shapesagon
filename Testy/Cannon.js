@@ -96,7 +96,6 @@ this.RotationPoint.SetLinearVelocity(new B2Vec2(0,-1));
 			//{
 				//world.DestroyJoint(this.RevJoint2);
 				this.RevJoint2=null;
-				//this.shoot = false;
 				world.DestroyJoint(this.jointJohn);
 				var bodyAngle = this.RotationPoint.GetAngle();
 				bodyAngle = bodyAngle-.1;

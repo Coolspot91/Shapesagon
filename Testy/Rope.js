@@ -1,27 +1,8 @@
 function Rope(mCanvas,mContext,mWorld,mPos, mSize)
-{		
-	// this.world = mWorld;
-	// this.canvas = mCanvas;
-	// this.context = mContext;
-	// this.fixDef = new B2FixtureDef();
-	// this.bodyDef = new B2BodyDef();
-	// this.fixDef2 = new B2FixtureDef();
-	// this.bodyDef2 = new B2BodyDef();
-	// this.fixDef3 = new B2FixtureDef();
-	// this.bodyDef3 = new B2BodyDef();
-	// this.pos = mPos;
-	// this.size = mSize;
-	// this.MoveLeft = false;
-	// this.MoveRight = false;
-	// this.shoot = false;
-	
-	// this.fixDef.density = 1.0;	
-	// this.fixDef.friction = 0.8;	
-	// this.fixDef.restitution = 0.1;	
-	
-	 this.DEGTORAD  = 0.0174532925199432957;
-	 this.RADTODEG = 57.295779513082320876;
-	// this.rot = new B2Vec2(1,1);
+{			
+	this.DEGTORAD  = 0.0174532925199432957;
+	this.MoveLeft = false;
+	this.MoveRight = false;
 	
 	this.fixDefRotationPoint = new B2FixtureDef();
 	this.bodyDefRotationPoint = new B2BodyDef();
@@ -63,6 +44,7 @@ function Rope(mCanvas,mContext,mWorld,mPos, mSize)
 	//create first link
 	this.theBody = world.CreateBody(this.bodyDef);
 	this.theBody.CreateFixture(this.fixDef);
+	this.theBody.SetUserData("RopePart");
 	
 	
 	this.RevJoint = new B2RevoluteJointDef();
@@ -81,6 +63,7 @@ function Rope(mCanvas,mContext,mWorld,mPos, mSize)
   {
 	  this.newBody = world.CreateBody(this.bodyDef);
 	  this.newBody.CreateFixture(this.fixDef);
+	  this.newBody.SetUserData("RopePart");
 	  
 	  this.RevJoint.bodyA = this.theBody;
       this.RevJoint.bodyB = this.newBody;
@@ -101,8 +84,6 @@ function Rope(mCanvas,mContext,mWorld,mPos, mSize)
 
 Rope.prototype.Update = function()
 {
- //this.RotationPoint.ApplyForce( this.RotationPoint.GetMass() * world.GetGravity(), this.RotationPoint.GetWorldCenter() );
- //this.RotationPoint.ApplyForce( new B2Vec2(0,-5), this.RotationPoint.GetWorldCenter() );
  this.RotationPoint.SetLinearVelocity(new B2Vec2(0,-1));
 	if(this.shoot == true)
 		{
@@ -124,9 +105,12 @@ Rope.prototype.Update = function()
 
 Rope.prototype.DestroyRope = function()
 {	
+	world.DestroyBody(this.theBody);
+	world.DestroyBody(this.circle);
+	world.DestroyBody(this.RotationPoint);
 	for (var b = world.GetBodyList(); b; b = b.GetNext())
 	{
-	 if(b.GetUserData()	 != "wall")
+	 if(b.GetUserData()	 == "RopePart")
 	  {
 		world.DestroyBody(b);
 	  }

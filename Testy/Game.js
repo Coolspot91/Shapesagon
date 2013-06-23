@@ -36,70 +36,67 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		,   B2WeldJointDef = Box2D.Dynamics.Joints.b2WeldJointDef
 		,	B2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef;
 
-        var world = new B2World(new B2Vec2(0,5), false);
+    var world = new B2World(new B2Vec2(0,5), false);
 		//this.world = new B2World( new B2Vec2(0, 9.81), true);
-        var b_canvas = document.getElementById("canvas");
-        var b_context = b_canvas.getContext("2d");
+    var b_canvas = document.getElementById("canvas");
+    var b_context = b_canvas.getContext("2d");
 	
-		
-		var Cannon, myBall, game, Rope;
-        var drawPlatform = true;
-        var destroy = false;
-		var createCannon = true;
+	var game;
+    var drawPlatform = true;
+    var destroy = false;
+	var updateCannon = false;
+	var updateRope = false;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        var debugDraw = new B2DebugDraw();
-        debugDraw.SetSprite ( document.getElementById ("canvas").getContext ("2d"));
-        debugDraw.SetDrawScale(30);     //define scale
-        debugDraw.SetFillAlpha(0.3);    //define transparency
-        debugDraw.SetLineThickness(1.0);
-        debugDraw.SetFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit);
-        world.SetDebugDraw(debugDraw);
+    var debugDraw = new B2DebugDraw();
+    debugDraw.SetSprite ( document.getElementById ("canvas").getContext ("2d"));
+    debugDraw.SetDrawScale(30);     //define scale
+    debugDraw.SetFillAlpha(0.3);    //define transparency
+    debugDraw.SetLineThickness(1.0);
+    debugDraw.SetFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit);
+    world.SetDebugDraw(debugDraw);
 		
-		game = new Game(b_canvas, b_context, world); 
+	game = new Game(b_canvas, b_context, world); 
 		
 		
-	function Game(b_canvas, b_context, world)
-	{	
-		if(createCannon)
-		{Cannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5) , new B2Vec2(3/2 , 1.5/2));}
-		else
-		{Rope = new Rope(this.b_canvas,this.b_context,this.world,  new B2Vec2(20, 5) , new B2Vec2(.3/2 , 1/2));}
+function Game(b_canvas, b_context, world)
+{	
 		  
-		this.BounceBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(9, 15));
-		this.BounceBall2 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(12, 15));
-		this.BounceBall3 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 15));
-		this.BounceBall4 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(18, 15));
-		this.BounceBall5 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(21, 15));
+	this.BounceBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(9, 15));
+	this.BounceBall2 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(12, 15));
+	this.BounceBall3 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 15));
+	this.BounceBall4 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(18, 15));
+	this.BounceBall5 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(21, 15));
 		
-		this.BounceBall6 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(10.5, 17));
-		this.BounceBall7 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(13.5, 17));
-		this.BounceBall8 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(16.5, 17));
-		this.BounceBall9 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(19.5, 17));
+	this.BounceBall6 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(10.5, 17));
+	this.BounceBall7 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(13.5, 17));
+	this.BounceBall8 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(16.5, 17));
+	this.BounceBall9 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(19.5, 17));
 		
-		this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2)); 
-		this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2));
-		this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2));
+	this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2)); 
+	this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2));
+	this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2));
 
 	}
 
 		
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        window.setInterval(update,1000/60);
+    window.setInterval(update,1000/60);
 		
-        function update() 
-        {
-            world.Step(1 / 60, 10, 10);
-            world.DrawDebugData();
-            world.ClearForces();
+    function update() 
+    {
+        world.Step(1 / 60, 10, 10);
+        world.DrawDebugData();
+        world.ClearForces();
            
-			if(createCannon)
-			{Cannon.Update();}
-			else{Rope.Update();}
+		if(updateCannon)
+		{this.myCannon.Update();}
+		if (updateRope)
+		{this.myRope.Update();}
     	   	
-		}
+	}
 
 
 window.addEventListener('keyup', function (event) 
@@ -108,19 +105,22 @@ window.addEventListener('keyup', function (event)
     {      
                
         case 37: // Left arrow
-		Cannon.MoveLeft = false;
-		Rope.MoveLeft = false;
+		if(updateCannon){
+		this.myCannon.MoveLeft = false;}
+		this.myRope.MoveLeft = false;
            	break;
        	case 39: // Right arrow
-		Cannon.MoveRight = false;
-		Rope.MoveRight = false;
+		if(updateCannon){
+		this.myCannon.MoveRight = false;}
+		this.myRope.MoveRight = false;
            	break;
 		case 38:  // up arrow
-		Cannon.reset = false;
+		this.myCannon.reset = false;
 			break;
 		case 32: // Space
-		Cannon.shoot = false;
-		Rope.shoot = false;
+		if(updateCannon){
+		this.myCannon.shoot = false;}
+		this.myRope.shoot = false;
 			break;
     }
 }
@@ -132,17 +132,19 @@ window.addEventListener('keydown', function (event)
     {      
                
         case 37: // Left arrow
-		Cannon.MoveLeft = true;
-		Rope.MoveLeft = true;
+		if(updateCannon){
+		this.myCannon.MoveLeft = true;}
+		this.myRope.MoveLeft = true;
            	break;
 			
        	case 39: // Right arrow
-		Cannon.MoveRight = true;
-		Rope.MoveRight = true;
+		if(updateCannon){
+		this.myCannon.MoveRight = true;}
+		this.myRope.MoveRight = true;
            	break;
 			
 		case 38:  // up arrow
-		Cannon.reset = true;
+		this.myCannon.reset = true;
 			break;
 			
 		// case 40:   // up arrow
@@ -150,27 +152,47 @@ window.addEventListener('keydown', function (event)
 			// break;
 			
 		case 32:  // Space
-		Cannon.shoot = true;
-		Rope.shoot = true;
+		if(updateCannon){
+		this.myCannon.shoot = true;}
+		this.myRope.shoot = true;
 			break;
 			
 		case 65: //a
+		removeMultiObjects();
+		updateRope=true;
+		this.myRope = new Rope(this.b_canvas,this.b_context,this.world,  new B2Vec2(20, 5) , new B2Vec2(.3/2 , 1/2));
 			break;
 			
 		case 68:// d
+		removeMultiObjects();
+		updateCannon=true
+		this.myCannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5) , new B2Vec2(3/2 , 1.5/2));
 			break;
 			
 		case 87: // e
-		Cannon.DestroyCannon();
+		this.myCannon.DestroyCannon();
 			break;
 			
 		case 88:  //x
-		Rope.DestroyRope();
+		this.myRope.DestroyRope();
 			break;
 		
     }
 }
 , false);
+
+
+function removeMultiObjects() 
+{
+	if(this.myRope != null)
+	{
+		this.myRope.DestroyRope();
+	}
+	if(this.myCannon != null)
+	{
+		this.myCannon.DestroyCannon();
+	}
+}
 
 
 
