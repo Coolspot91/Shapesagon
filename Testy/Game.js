@@ -42,11 +42,9 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
     var b_context = b_canvas.getContext("2d");
 
 	   //for platform
-        //var a = document.createElement('script');
-        //a.src = "platform.js"
-        //document.body.appendChild(a);
-
-	//var drawPlatform = true;
+    var a = document.createElement('script');
+    a.src = "platform.js"
+    document.body.appendChild(a);
 	
 	var game;
     var drawPlatform = true;

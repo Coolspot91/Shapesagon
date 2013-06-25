@@ -11,13 +11,13 @@ var jointF;
 if(drawPlatform == true)
 {
 	  //TOP
-	  var platformDef = new b2BodyDef;
-	  platformDef.type = b2Body.b2_dynamicBody;
+	  var platformDef = new B2BodyDef;
+	  platformDef.type = B2Body.b2_dynamicBody;
 	  platformDef.position.x = platformX;
 	  platformDef.position.y = platformY;
 	 
-	  var fixDefPlatform = new b2FixtureDef;
-	  fixDefPlatform.shape = new b2PolygonShape();
+	  var fixDefPlatform = new B2FixtureDef;
+	  fixDefPlatform.shape = new B2PolygonShape();
 	  fixDefPlatform.shape.SetAsBox(platformWidth , platformHeight);
 	  
 	  var platformF = world.CreateBody(platformDef);
@@ -25,29 +25,29 @@ if(drawPlatform == true)
 	  platformF.SetUserData("platform");
 	  
 	  //TOP
-	  var platformDef2 = new b2BodyDef;
-	  platformDef2.type = b2Body.b2_kinematicBody;
+	  var platformDef2 = new B2BodyDef;
+	  platformDef2.type = B2Body.b2_kinematicBody;
 	  platformDef2.position.x = platformX;
 	  platformDef2.position.y = platformY;
 	 
-	  var fixDefPlatform2 = new b2FixtureDef;
-	  fixDefPlatform2.shape = new b2PolygonShape();
+	  var fixDefPlatform2 = new B2FixtureDef;
+	  fixDefPlatform2.shape = new B2PolygonShape();
 	  fixDefPlatform2.shape.SetAsBox(platformWidth , platformHeight);
 	  
 	  var platformF2 = world.CreateBody(platformDef2);
 	  platformF2.CreateFixture(fixDefPlatform2);
 	  platformF2.SetUserData("platform");
 	  
-	  jointDef = new b2WeldJointDef();
+	  jointDef = new B2WeldJointDef();
 	  jointDef.bodyA = platformF;
 	  jointDef.bodyB = platformF2;
 	  jointDef.localAnchorA.Set(0,0);
 	  
 	  //jointF = world.CreateJoint(jointDef);
 	  var jointJohn = world.CreateJoint(jointDef);
-	
+	var listener = new Box2D.Dynamics.b2ContactListener;
 	  
-	  listener2.BeginContact = function(contact) 
+	  listener.BeginContact = function(contact) 
 	  {
 		  // console.log(contact.GetFixtureA().GetBody().GetUserData());
 		  if(contact.GetFixtureB().GetBody().GetUserData()=="platform" 
@@ -77,7 +77,7 @@ if(drawPlatform == true)
 	  }
 
 	    
-	  listener2.EndContact = function(contact) 
+	  listener.EndContact = function(contact) 
 	  {
 		  // console.log(contact.GetFixtureA().GetBody().GetUserData());
 		  if(contact.GetFixtureB().GetBody().GetUserData()=="platform" 
@@ -91,5 +91,7 @@ if(drawPlatform == true)
 			  }
 		  }
 	  }
+	  
+	  this.world.SetContactListener(listener);
 	  
 }
