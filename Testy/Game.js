@@ -40,6 +40,13 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		//this.world = new B2World( new B2Vec2(0, 9.81), true);
     var b_canvas = document.getElementById("canvas");
     var b_context = b_canvas.getContext("2d");
+
+	   //for platform
+        //var a = document.createElement('script');
+        //a.src = "platform.js"
+        //document.body.appendChild(a);
+
+	//var drawPlatform = true;
 	
 	var game;
     var drawPlatform = true;
