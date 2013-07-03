@@ -56,6 +56,8 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 	var destroyRopeBall = false;
 	
 	var hitLeftWall = false;
+	var image = new Image();
+    image.src = "mouse3small.png";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -136,6 +138,13 @@ function Game(b_canvas, b_context, world)
 		{
 		this.myCannon.reset = true;
 		}
+
+			
+		b_context.save();
+		b_context.translate(this.myCannon.pos.x*32,this.myCannon.pos.y*32);
+		b_context.rotate(this.myCannon.RotationPoint.GetAngle());
+		b_context.drawImage(image, -15, -15,30,30);
+        b_context.restore();
     	   	
 	}
 
