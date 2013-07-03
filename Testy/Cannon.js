@@ -60,7 +60,7 @@ function Cannon(mCanvas,mContext,mWorld,mPos, mSize)
 	this.fixDefCircle.shape = new B2CircleShape(0.35);
 	this.circle = world.CreateBody(this.bodyDefCircle);
 	this.circle.CreateFixture(this.fixDefCircle);
-	this.circle.SetUserData("ball");
+	this.circle.SetUserData("gameball");
 	
 	
 	this.WeldJoint = new B2WeldJointDef();
@@ -140,6 +140,8 @@ Cannon.prototype.ResetBall = function()
 	
 	
 	this.jointJohn = world.CreateJoint(this.RevJoint2);
+	
+	this.reset = false;
 	}
 }
 

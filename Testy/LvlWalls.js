@@ -1,4 +1,4 @@
-function LvlWalls(mCanvas,mContext,mWorld,mPos,mSize)
+function LvlWalls(mCanvas,mContext,mWorld,mPos,mSize,mUserData)
 {
 	this.world = mWorld;
 	this.canvas = mCanvas;
@@ -21,6 +21,6 @@ function LvlWalls(mCanvas,mContext,mWorld,mPos,mSize)
 	fixDefWall.shape.SetAsBox(this.size.x , this.size.y);
 	var wall = world.CreateBody(bodyDefWall);
 	wall.CreateFixture(fixDefWall);
-	wall.SetUserData("wall");
+	wall.SetUserData(mUserData);
 		  
 }

@@ -46,11 +46,16 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
     a.src = "platform.js"
     document.body.appendChild(a);
 	
-	var game;
+	var game, barrier1;
     var drawPlatform = true;
     var destroy = false;
 	var updateCannon = false;
 	var updateRope = false;
+	
+	var destroyCannonBall = false;
+	var destroyRopeBall = false;
+	
+	var hitLeftWall = false;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -63,7 +68,7 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
     world.SetDebugDraw(debugDraw);
 		
 	game = new Game(b_canvas, b_context, world); 
-		
+	//var contactLis; 	
 		
 function Game(b_canvas, b_context, world)
 {	
@@ -78,10 +83,18 @@ function Game(b_canvas, b_context, world)
 	this.BounceBall7 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(13.5, 17));
 	this.BounceBall8 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(16.5, 17));
 	this.BounceBall9 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(19.5, 17));
+	
+	barrier1 = new Barrier(this.b_canvas,this.b_context,this.world,  new B2Vec2(20.3, 16), new B2Vec2(1.7/2 , .5/2), -53);
 		
-	this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2)); 
-	this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2));
-	this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2));
+	this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2),"wallLeft"); 
+	//this.LeftWall.SetUserData("wallLeft");
+	
+	this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2),"wallRight");
+	//this.RightWall.SetUserData("wallRight");
+	
+	this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2),"wallTop");
+	
+	//var contactLis = new ContactListener(b_canvas, b_context, world, barrier1);	
 
 	}
 
@@ -100,6 +113,29 @@ function Game(b_canvas, b_context, world)
 		{this.myCannon.Update();}
 		if (updateRope)
 		{this.myRope.Update();}
+		
+		barrier1.Update();
+		
+		if(hitLeftWall == false)
+		{
+		platformF.SetLinearVelocity(new B2Vec2(-5, -0.084));
+		platformF2.SetLinearVelocity(new B2Vec2(-5, 0));
+		}
+		else if(hitLeftWall == true)
+		{
+		platformF.SetLinearVelocity(new B2Vec2(5, -0.084));
+		platformF2.SetLinearVelocity(new B2Vec2(5, 0));
+		}
+		
+		if(destroyCannonBall == true)
+		{
+		this.myCannon.reset = true;
+		}
+				
+		if(destroyRopeBall == true)
+		{
+		this.myCannon.reset = true;
+		}
     	   	
 	}
 

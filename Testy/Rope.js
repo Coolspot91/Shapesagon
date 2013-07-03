@@ -29,7 +29,7 @@ function Rope(mCanvas,mContext,mWorld,mPos, mSize)
 	this.fixDefCircle.shape = new B2CircleShape(0.35);
 	this.circle = world.CreateBody(this.bodyDefCircle);
 	this.circle.CreateFixture(this.fixDefCircle);
-	this.circle.SetUserData("ball");
+	this.circle.SetUserData("gameball");
 	
 	this.fixDef = new B2FixtureDef();
 	this.bodyDef = new B2BodyDef();
