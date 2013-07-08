@@ -36,84 +36,130 @@ var CANVAS_WIDTH = 1000, CANVAS_HEIGHT = 900, SCALE = 30;
 		,   B2WeldJointDef = Box2D.Dynamics.Joints.b2WeldJointDef
 		,	B2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef;
 
-        var world = new B2World(new B2Vec2(0,0), false);
+    var world = new B2World(new B2Vec2(0,5), false);
 		//this.world = new B2World( new B2Vec2(0, 9.81), true);
-        var b_canvas = document.getElementById("canvas");
-        var b_context = b_canvas.getContext("2d");
-		var fixDef = new B2FixtureDef();	
-		var bodyDef = new B2BodyDef();	
-		
-		var Cannon, myBall;
-        var drawPlatform = true;
-        var destroy = false;
+    var b_canvas = document.getElementById("canvas");
+    var b_context = b_canvas.getContext("2d");
+
+	   //for platform
+    var a = document.createElement('script');
+    a.src = "platform.js"
+    document.body.appendChild(a);
+	
+	var game;
+    var drawPlatform = true;
+    var destroyCannonBall = false;
+	var destroyRopeBall = false;
+	var updateCannon = false;
+	var updateRope = false;
+	
+	var hitLeftWall = false;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        var debugDraw = new B2DebugDraw();
-        debugDraw.SetSprite ( document.getElementById ("canvas").getContext ("2d"));
-        debugDraw.SetDrawScale(30);     //define scale
-        debugDraw.SetFillAlpha(0.3);    //define transparency
-        debugDraw.SetLineThickness(1.0);
-        debugDraw.SetFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit);
-        world.SetDebugDraw(debugDraw);
+    var debugDraw = new B2DebugDraw();
+    debugDraw.SetSprite ( document.getElementById ("canvas").getContext ("2d"));
+    debugDraw.SetDrawScale(30);     //define scale
+    debugDraw.SetFillAlpha(0.3);    //define transparency
+    debugDraw.SetLineThickness(1.0);
+    debugDraw.SetFlags(B2DebugDraw.e_shapeBit | B2DebugDraw.e_jointBit);
+    world.SetDebugDraw(debugDraw);
+		
+	game = new Game(b_canvas, b_context, world); 
 		
 		
-	function Game(b_canvas, b_context, world)
-	{	
+function Game(b_canvas, b_context, world)
+{	
+		  
+	this.BounceBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(9, 15));
+	this.BounceBall2 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(12, 15));
+	this.BounceBall3 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 15));
+	this.BounceBall4 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(18, 15));
+	this.BounceBall5 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(21, 15));
+		
+	this.BounceBall6 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(10.5, 17));
+	this.BounceBall7 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(13.5, 17));
+	this.BounceBall8 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(16.5, 17));
+	this.BounceBall9 = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(19.5, 17));
+		
+	this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2),"wallLeft"); 
+	//this.LeftWall.SetUserData("wallLeft");
 	
-		/*var bodyDef = new B2BodyDef;
-		bodyDef.type = B2Body.b2_dynamicBody;
-		bodyDef.position.x = 22;
-		bodyDef.position.y = 13;
-		 
-		var fixDef = new B2FixtureDef;
-		fixDef.density = 1000.0;
-		fixDef.friction = 0;
-		fixDef.restitution = 0.2;
-		fixDef.shape = new B2CircleShape(0.35);
-		circle = world.CreateBody(bodyDef);
-		circle.CreateFixture(fixDef);
-		circle.SetUserData("ball");*/
-
-		  
-		Cannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5));
-		//myBall = new Ball(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 7));
-		  
-		this.LeftWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(4.75, 13), new B2Vec2(.5/2, 24/2)); 
-		this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2));
-		this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2));
+	this.RightWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(25.25, 13), new B2Vec2(.5/2, 24/2),"wallRight");
+	//this.RightWall.SetUserData("wallRight");
+	
+	this.TopWall = new LvlWalls(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 1), new B2Vec2(20/2, .5/2),"wallTop");
 
 	}
-	
-		var game = new Game(b_canvas, b_context, world);
+
 		
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        window.setInterval(update,1000/60);
+    window.setInterval(update,1000/60);
 		
-        function update() 
-        {
-            world.Step(1 / 60, 10, 10);
-            world.DrawDebugData();
-            world.ClearForces();
+    function update() 
+    {
+        world.Step(1 / 60, 10, 10);
+        world.DrawDebugData();
+        world.ClearForces();
            
-			
-			Cannon.Update();
-    	   	
+		if(updateCannon)
+		{this.myCannon.Update();}
+		if (updateRope)
+		{this.myRope.Update();}
+		
+		if(hitLeftWall == false)
+		{
+		platformF.SetLinearVelocity(new B2Vec2(-5, -0.084));
+		platformF2.SetLinearVelocity(new B2Vec2(-5, 0));
 		}
+		else if(hitLeftWall == true)
+		{
+		platformF.SetLinearVelocity(new B2Vec2(5, -0.084));
+		platformF2.SetLinearVelocity(new B2Vec2(5, 0));
+		}
+		
+		if(destroyCannonBall == true)
+		{
+		world.DestroyBody(this.myCannon.circle);
+		}
+				
+		if(destroyRopeBall == true)
+		{
+		world.DestroyBody(this.myRope.circle);
+		}
+		
+		
+		
+   	   	
+	}
 
 
 window.addEventListener('keyup', function (event) 
+
+
 {
 	switch (event.keyCode) 
     {      
                
         case 37: // Left arrow
-		Cannon.MoveLeft = false;
+		if(updateCannon){
+		this.myCannon.MoveLeft = false;}
+		this.myRope.MoveLeft = false;
            	break;
        	case 39: // Right arrow
-		Cannon.MoveRight = false;
+		if(updateCannon){
+		this.myCannon.MoveRight = false;}
+		this.myRope.MoveRight = false;
            	break;
+		case 38:  // up arrow
+		this.myCannon.reset = false;
+			break;
+		case 32: // Space
+		if(updateCannon){
+		this.myCannon.shoot = false;}
+		this.myRope.shoot = false;
+			break;
     }
 }
 , false);
@@ -124,29 +170,67 @@ window.addEventListener('keydown', function (event)
     {      
                
         case 37: // Left arrow
-		Cannon.MoveLeft = true;
-		//Cannon.theBody.ApplyImpulse(new B2Vec2(0,5*-125),new B2Vec2(0,0));
-		//circle.ApplyImpulse(new B2Vec2(-200,0),new B2Vec2(0,0));
-		//this.myBall.circle.SetAngularVelocity(1);
+		if(updateCannon){
+		this.myCannon.MoveLeft = true;}
+		this.myRope.MoveLeft = true;
            	break;
 			
        	case 39: // Right arrow
-		Cannon.MoveRight = true;
-		//Cannon.theBody.ApplyImpulse(new B2Vec2(0,5*125),new B2Vec2(0,0));
-		//circle.ApplyImpulse(new B2Vec2(2000,0),new B2Vec2(0,0));
-		//myBall.circle.SetAngularVelocity(-1);
+		if(updateCannon){
+		this.myCannon.MoveRight = true;}
+		this.myRope.MoveRight = true;
            	break;
 			
 		case 38:  // up arrow
-		//circle.ApplyImpulse(new B2Vec2(0,5*-200),new B2Vec2(0,0));
+		this.myCannon.reset = true;
 			break;
 			
-		case 32:
-		Cannon.shoot = true;
+		// case 40:   // up arrow
+
+			// break;
+			
+		case 32:  // Space
+		if(updateCannon){
+		this.myCannon.shoot = true;}
+		this.myRope.shoot = true;
 			break;
+			
+		case 65: //a
+		removeMultiObjects();
+		updateRope=true;
+		this.myRope = new Rope(this.b_canvas,this.b_context,this.world,  new B2Vec2(20, 5) , new B2Vec2(.3/2 , 1/2));
+			break;
+			
+		case 68:// d
+		removeMultiObjects();
+		updateCannon=true
+		this.myCannon = new Cannon(this.b_canvas,this.b_context,this.world,  new B2Vec2(15, 5) , new B2Vec2(3/2 , 1.5/2));
+			break;
+			
+		case 87: // e
+		this.myCannon.DestroyCannon();
+			break;
+			
+		case 88:  //x
+		this.myRope.DestroyRope();
+			break;
+		
     }
 }
 , false);
+
+
+function removeMultiObjects() 
+{
+	if(this.myRope != null)
+	{
+		this.myRope.DestroyRope();
+	}
+	if(this.myCannon != null)
+	{
+		this.myCannon.DestroyCannon();
+	}
+}
 
 
 
